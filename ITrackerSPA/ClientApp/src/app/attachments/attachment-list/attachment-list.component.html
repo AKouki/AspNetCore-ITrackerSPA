@@ -3,10 +3,10 @@
 <div *ngIf="errorMessage" class="alert alert-danger"><b>Error:</b> {{ errorMessage }} </div>
 
 <div class="header-actions">
-  <input type="text" [(ngModel)]='listFilter' class="form-control" placeholder="Search for attachment...">
+  <input type="search" [(ngModel)]='searchText' class="form-control" placeholder="Search for attachment...">
 </div>
 
-<div *ngIf="!attachments || attachments.length == 0">No attachments found.</div>
+<div class="mt-2" *ngIf="!attachments || attachments.length == 0">No attachments found.</div>
 
 <table class='table table-striped' *ngIf='attachments && attachments.length'>
   <thead>
@@ -19,16 +19,18 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let attachment of attachments | attachmentFilter:listFilter'>
+    <tr *ngFor='let attachment of attachments | attachmentFilter:searchText'>
       <td>{{ attachment.attachmentId }}</td>
       <td>{{ attachment.name }}</td>
-      <td>{{ attachment.fileType || "Unknown" }}</td>
-      <td>{{ attachment.createdAt | date:'yyyy-MM-dd HH:mm a' || "No Date" }}</td>
+      <td>{{ fileTypeToText(attachment.fileType) }}</td>
+      <td>{{ attachment.createdAt | date:'dd/MM/yyyy HH:mm a' || "No Date" }}</td>
       <td>
         <!-- Open Images/Documents in browser (no need to download)  -->
-        <a target="_blank" href="../{{ attachment.path }}" role="button" class="action-button"><i class="fas fa-file-download"></i></a>
-        <a (click)="deleteAttachment(attachment)" role="button" class="action-button">
-          <i class="fas fa-times text-danger"></i>
+        <a target="_blank" href="../{{ attachment.path }}" role="button" class="me-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-download"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+        </a>
+        <a (click)="deleteAttachment(attachment)" role="button" class="text-danger">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </a>
       </td>
     </tr>

@@ -1,9 +1,5 @@
 ﻿using ITrackerSPA.Models.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ITrackerSPA.Models
 {
@@ -13,16 +9,16 @@ namespace ITrackerSPA.Models
 
         [StringLength(256, MinimumLength = 5)]
         [Required]
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string? Title { get; set; }
+        public string? Description { get; set; }
         public IssueType IssueType { get; set; }
         public Priority Priority { get; set; }
         public Status StatusType { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
-        public string Creator { get; set; }
+        public string? Creator { get; set; }
 
-        public Project Project { get; set; }
-        public ICollection<Attachment> Attachments { get; set; }
+        public Project? Project { get; set; }
+        public ICollection<Attachment>? Attachments { get; set; }
     }
 }

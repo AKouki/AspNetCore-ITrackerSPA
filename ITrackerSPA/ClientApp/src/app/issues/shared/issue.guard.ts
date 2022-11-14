@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
 
 @Injectable({
@@ -10,15 +10,15 @@ export class IssueGuard implements CanActivate {
   constructor(private router: Router) { }
 
   canActivate(
-    next: ActivatedRouteSnapshot,
+    route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-    const id = +next.url[1].path;
-
-    if (isNaN(id) || id < -1) {
+    const id = +route.url[1].path;
+    if (isNaN(id) || id < 1) {
       alert('Invalid issue Id');
-      this.router.navigate(['/issues']);
+      this.router.navigate(['/Issues']);
       return false;
     };
+
     return true;
   }
   

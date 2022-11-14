@@ -1,47 +1,50 @@
 <div class="sidebar">
-  <nav class="navbar navbar-expand-lg main-nav navbar-dark">
-    <a class="navbar-brand" [routerLink]="['/']">ITracker</a>
-    <button class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target=".navbar-collapse"
-            aria-label="Toggle navigation"
-            [attr.aria-expanded]="isExpanded"
-            (click)="toggle()">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="current-project my-2 w-100">
-      <select (change)="onProjectChange($event.target.value)" id="bs-current-project" class="selectpicker form-control" data-live-search="true" data-width="100%" data-style="someClass">
-        <option value="-1">All</option>
-        <!--<option data-divider="true"></option>-->
-        <option value='{{ project.projectId }}' *ngFor="let project of projects">{{project?.name}}</option>
-      </select>
+  <nav class="navbar navbar-expand-lg py-lg-0 navbar-dark h-100 navbar-toggleable-lg align-items-lg-start mb-3">
+    <div class="container-fluid px-lg-0 flex-lg-column h-100 align-items-lg-stretch">
+      <a class="navbar-brand py-lg-3" [routerLink]="['/']">ITrackerSPA</a>
+      <button class="navbar-toggler"
+              type="button"
+              data-toggle="collapse"
+              data-target=".navbar-collapse"
+              aria-label="Toggle navigation"
+              [attr.aria-expanded]="isExpanded"
+              (click)="toggle()">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="navbar-collapse collapse flex-lg-column align-items-stretch"
+           [ngClass]="{ show: isExpanded }">
+        <ul class="navbar-nav flex-lg-column mt-3" *ngIf="isAuthenticated | async">
+          <li class="nav-item"
+              [routerLinkActive]="['link-active']"
+              [routerLinkActiveOptions]="{ exact: true }">
+            <a class="nav-link text-dark" [routerLink]="['/']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+              Home
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/Projects']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-folder"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+              Projects
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/Issues']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+              Issues
+            </a>
+          </li>
+          <li class="nav-item" [routerLinkActive]="['link-active']">
+            <a class="nav-link text-dark" [routerLink]="['/Attachments']">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
+              Attachments
+            </a>
+          </li>
+        </ul>
+        <div class="user-profile">
+          <app-login-menu></app-login-menu>
+        </div>
+      </div>
     </div>
-    <div class="navbar-collapse collapse mt-2"
-         [ngClass]="{ show: isExpanded }">
-      <ul class="navbar-nav flex-column">
-        <li class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" [routerLink]="['/']"><i class="fas fa-home"></i> Home</a>
-        </li>
-        <li class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" [routerLink]="['/projects']"><i class="fas fa-folder"></i> Projects</a>
-        </li>
-        <li class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" [routerLink]="['/issues']"><i class="fas fa-tasks"></i> Issues</a>
-        </li>
-        <li class="nav-item"
-            [routerLinkActive]="['link-active']"
-            [routerLinkActiveOptions]="{ exact: true }">
-          <a class="nav-link" [routerLink]="['/attachments']"><i class="fas fa-file"></i> Attachments</a>
-        </li>
-      </ul>
-    </div>
-    <app-login-menu></app-login-menu>
   </nav>
 </div>

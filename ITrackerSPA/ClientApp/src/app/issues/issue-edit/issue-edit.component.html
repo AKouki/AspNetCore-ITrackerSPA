@@ -1,70 +1,60 @@
 <p *ngIf="!issue">Error while loading issue</p>
-<div *ngIf="issue" class="container-fluid form-group form-new">
-  <div class="row">
-    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">Error: {{ errorMessage }}</div>
-    <div class="col-lg-2 visible-lg"></div>
-    <div class="col-xs-12 col-lg-8" style="background:#eee;">
-      <h4>Edit Issue</h4>
-      <form #form="ngForm" (submit)="onSubmit(form)" novalidate>
-        <div class="form-group">
-          <label>Title</label>
-          <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Title" required
-                 [ngModel]="issue.title"
-                 (ngModelChange)="issue.title=$event">
-          <!-- <div *ngIf="pname.invalid" class="alert alert-danger">Issue title is required. Minimum length: 5</div> -->
-        </div>
-        <div class="form-group">
-          <div class="row">
-            <div class="col-lg-6">
-              <label>Priority</label>
-              <select name="priority" class="form-control" data-width="100%"
-                      [(ngModel)]="issue.priority"
-                      (ngModelChange)="issue.priority=$event">
-                <option [ngValue]="0">Low</option>
-                <option [ngValue]="1">Normal</option>
-                <option [ngValue]="2">High</option>
-              </select>
-            </div>
-            <div class="col-lg-6">
-              <label>Issue Type</label>
-              <select name="issuetype" class="form-control" data-width="100%"
-                      [(ngModel)]="issue.issueType"
-                      (ngModelChange)="issue.issueType=$event">
-                <option [ngValue]="0">Bug</option>
-                <option [ngValue]="1">Task</option>
-                <option [ngValue]="2">Change</option>
-                <option [ngValue]="3">Enhancement</option>
-              </select>
-            </div>
-          </div>
-        </div>
+<div *ngIf="issue" class="d-flex justify-content-center">
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">Error: {{ errorMessage }}</div>
+  <div class="col-8 p-3" style="background:#eee;">
+    <h4>Edit Issue</h4>
+    <form #form="ngForm" (submit)="onSubmit(form)" class="row g-2 mt-2" novalidate>
+      <div class="col-12">
+        <label class="form-label">Title</label>
+        <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Title" required
+               [ngModel]="issue.title"
+               (ngModelChange)="issue.title=$event">
+        <!-- <div *ngIf="pname.invalid" class="alert alert-danger">Issue title is required. Minimum length: 5</div> -->
+      </div>
+      <div class="col-6">
+        <label class="form-label">Priority</label>
+        <select name="priority" class="form-select" data-width="100%"
+                [(ngModel)]="issue.priority"
+                (ngModelChange)="issue.priority=$event">
+          <option [ngValue]="0">Low</option>
+          <option [ngValue]="1">Normal</option>
+          <option [ngValue]="2">High</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Issue Type</label>
+        <select name="issuetype" class="form-select" data-width="100%"
+                [(ngModel)]="issue.issueType"
+                (ngModelChange)="issue.issueType=$event">
+          <option [ngValue]="0">Bug</option>
+          <option [ngValue]="1">Task</option>
+          <option [ngValue]="2">Change</option>
+          <option [ngValue]="3">Enhancement</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Change Status</label>
+        <select name="statystype" class="form-select" data-width="100%"
+                [(ngModel)]="issue.statusType"
+                (ngModelChange)="issue.statusType=$event">
+          <option [ngValue]="0">Open</option>
+          <option [ngValue]="1">InProgress</option>
+          <option [ngValue]="2">Resolved</option>
+          <option [ngValue]="3">Reopened</option>
+          <option [ngValue]="4">Closed</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea rows="4" name="description" class="form-control" placeholder="Details"
+                  [ngModel]="issue.description"
+                  (ngModelChange)="issue.description=$event"></textarea>
+      </div>
 
-        <div class="form-group">
-          <label>Change Status</label>
-          <select name="statystype" class="form-control" data-width="100%"
-                  [(ngModel)]="issue.statusType"
-                  (ngModelChange)="issue.statusType=$event">
-            <option [ngValue]="0">Open</option>
-            <option [ngValue]="1">InProgress</option>
-            <option [ngValue]="2">Resolved</option>
-            <option [ngValue]="3">Reopened</option>
-            <option [ngValue]="4">Closed</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label>Description</label>
-          <textarea rows="4" name="description" class="form-control" placeholder="Details"
-                    [ngModel]="issue.description"
-                    (ngModelChange)="issue.description=$event"></textarea>
-        </div>
-
-        <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Update</button>
-          <a [routerLink]="['/issues']" class="btn btn-primary">Cancel</a>
-        </div>
-      </form>
-    </div>
-    <div class="col-lg-2 visible-lg"></div>
+      <div class="text-center col-12">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="form.invalid">Update</button>
+        <a [routerLink]="['/Issues']" class="btn btn-primary">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using ITrackerSPA.Data;
+﻿using ITrackerSPA.Data;
 using ITrackerSPA.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -23,18 +19,20 @@ namespace ITrackerSPA.Controllers
             _context = context;
         }
 
-        // GET: /Projects
         [HttpGet]
-        public IEnumerable<Project> Index()
+        public async Task<IEnumerable<Project>> Get()
         {
-            return _context.Projects.OrderByDescending(p => p.ProjectId).ToList();
+            var items = await _context.Projects
+                .OrderByDescending(p => p.ProjectId)
+                .ToListAsync();
+
+            return items;
         }
 
-        // GET: /Projects/5
         [HttpGet("{id}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var project = _context.Projects.Where(p => p.ProjectId == id).FirstOrDefault();
+            var project = await _context.Projects.FindAsync(id);
             if (project == null)
                 return NotFound();
 
@@ -42,80 +40,60 @@ namespace ITrackerSPA.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] Project project)
+        public async Task<IActionResult> Create([FromBody] Project project)
         {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            try
+            var newProject = new Project()
             {
-                var newProject = new Project()
-                {
-                    Name = project.Name,
-                    Url = project.Url,
-                    Description = project.Description,
-                    CreatedAt = DateTime.Now
-                };
+                Name = project.Name,
+                Url = project.Url,
+                Description = project.Description,
+                CreatedAt = DateTime.Now
+            };
 
-                _context.Projects.Add(newProject);
-                _context.SaveChanges();
-
-                return Ok();
-            }
-            catch (DbUpdateException)
-            {
-                return BadRequest();
-            }
-        }
-
-        [HttpPut("{id}")]
-        public IActionResult Edit(int id, [FromBody] Project project)
-        {
-            if (!ModelState.IsValid)
-                return BadRequest();
-
-            var _project = _context.Projects.Where(p => p.ProjectId == id).FirstOrDefault();
-            if (_project == null)
-                return NotFound();
-
-            // Only the fields we want to update
-            _project.Name = project.Name;
-            _project.Description = project.Description;
-            _project.Url = project.Url;
-
-            _context.Projects.Update(_project);
-            _context.SaveChanges();
+            _context.Projects.Add(newProject);
+            await _context.SaveChangesAsync();
 
             return Ok();
         }
 
-        // DELETE: /Projects/5
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Edit(int id, [FromBody] Project project)
         {
-            var project = _context.Projects.Where(p => p.ProjectId == id).FirstOrDefault();
-            if (project == null)
+            var projectToEdit = await _context.Projects.FindAsync(id);
+            if (projectToEdit == null)
                 return NotFound();
 
-            try
-            {
-                _context.Projects.Remove(project);
-                _context.SaveChanges();
-                return Ok();
-            }
-            catch (DbUpdateException)
-            {
-                return BadRequest();
-            }
+            projectToEdit.Name = project.Name;
+            projectToEdit.Description = project.Description;
+            projectToEdit.Url = project.Url;
+
+            _context.Projects.Update(projectToEdit);
+            await _context.SaveChangesAsync();
+
+            return Ok();
         }
 
-        // GET: /Projects/5/Issues
-        [HttpGet("{id}/[action]")]
-        public IEnumerable<Issue> Issues(int id)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
-            return _context.Issues.Where(i => i.Project.ProjectId == id)
-                        .OrderByDescending(i => i.IssueId)
-                        .ToList();
+            var project = await _context.Projects.FindAsync(id);
+            if (project == null)
+                return NotFound();
+            
+            _context.Projects.Remove(project);
+            _context.SaveChanges();
+            return Ok();
+        }
+
+        [HttpGet("{id}/[action]")]
+        public async Task<IEnumerable<Issue>> Issues(int id)
+        {
+            var items = await _context.Issues
+                .Where(i => i.Project!.ProjectId == id)
+                .OrderByDescending(i => i.IssueId)
+                .ToListAsync();
+
+            return items;
         }
     }
 }

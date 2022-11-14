@@ -1,47 +1,41 @@
-<h1>Issues <span class="label-small"> {{ sharedService.getCurrentProject()?.name || 'All' }} </span></h1>
-<!--<h1>Issues <span class="label-small">All</span></h1>-->
+<h1>Issues <span class="label-small">{{ currentProject || 'All' }}</span></h1>
 
-<div class="header-actions d-flex">
-  <div class="col-md-3">
-    <input type="text" [(ngModel)]='listFilter' class="form-control" placeholder="Search for issue...">
-  </div>
-  <div class="col-md-7">
-    <ul class='nav navbar-nav issues-header-actions d-flex flex-row'>
+<div class="header-actions d-flex justify-content-between align-items-center">
+  <div class="d-flex align-items-center">
+    <input type="search" [(ngModel)]='searchText' class="form-control" placeholder="Search for issue...">
+    <ul class='filters-list'>
       <li>
-        <select [(ngModel)]='filter1' data-title="Type" data-selected-text-format="static" id="bs-type" class="selectpicker form-control" data-width="100%">
+        <select [(ngModel)]='filter1' data-title="Type" data-selected-text-format="static" id="bs-type" class="form-select" data-width="100%">
+          <option value='-1' selected>All</option>
           <option value='0'>Bug</option>
           <option value='1'>Task</option>
           <option value='2'>Change</option>
           <option value='3'>Enhancement</option>
-          <option data-divider="true"></option>
-          <option value='-1' selected>All</option>
         </select>
       </li>
       <li>
-        <select [(ngModel)]='filter2' data-title="Priority" data-selected-text-format="static" id="bs-priority" class="selectpicker form-control" data-width="100%" data-style="someClass2">
+        <select [(ngModel)]='filter2' data-title="Priority" data-selected-text-format="static" id="bs-priority" class="form-select" data-width="100%">
+          <option value='-1' selected>All</option>
           <option value='0'>Low</option>
           <option value='1'>Normal</option>
           <option value='2'>High</option>
-          <option data-divider="true"></option>
-          <option value='-1' selected>All</option>
         </select>
       </li>
       <li>
-        <select [(ngModel)]='filter3' data-title="Status" data-selected-text-format="static" id="bs-status" class="selectpicker form-control" data-width="100%" data-style="someClass2">
+        <select [(ngModel)]='filter3' data-title="Status" data-selected-text-format="static" id="bs-status" class="form-select" data-width="100%">
+          <option value='-1'>All</option>
           <option value='0'>Open</option>
           <option value='1'>InProgress</option>
           <option value='2'>Resolved</option>
           <option value='3'>Reopened</option>
           <option value='4'>Closed</option>
-          <option data-divider="true"></option>
-          <option value='-1'>All</option>
 
         </select>
       </li>
     </ul>
   </div>
-  <div class="col-md-2 text-right">
-    <a [routerLink]="['/issues', 'create']" class="btn btn-primary">New Issue</a>
+  <div class="text-right">
+    <a [routerLink]="['/Issues/Create']" class="btn btn-primary">New Issue</a>
   </div>
 </div>
 
@@ -54,22 +48,31 @@
       <th>Title</th>
       <th>Creator</th>
       <th>Date</th>
+      <th>Type</th>
       <th>Priority</th>
       <th>Status</th>
       <th>Actions</th>
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let issue of issues | issueFilter:listFilter | issueFilterByType:filter1 | issueFilterByPriority:filter2 | issueFilterByStatus:filter3'>
+    <tr *ngFor='let issue of issues | issueFilter:searchText | issueFilterByType:filter1 | issueFilterByPriority:filter2 | issueFilterByStatus:filter3'>
       <td>{{ issue.issueId }}</td>
       <td>
-        <a [routerLink]="['/issues', issue.issueId, 'edit']">{{issue.title}}</a>
+        <a [routerLink]="['/Issues', issue.issueId, 'Edit']">{{issue.title}}</a>
       </td>
       <td>{{ issue.creator }}</td>
-      <td>{{ issue.createdAt | date:'yyyy-MM-dd HH:mm a'}}</td>
+      <td>{{ issue.createdAt | date:'dd/MM/yyyy hh:mm a'}}</td>
+      <td>{{ getIssueTypeText(issue.issueType) }}</td>
       <td>
-        <i class="priority" [ngClass]="priorityToClass(issue.priority)"></i>
-        {{ priorityToText(issue.priority) }}
+        <div class="d-flex align-items-center">
+          <div class="me-2" [ngClass]="priorityToClass(issue.priority)">
+            <svg xmlns="http://www.w3.org/2000/svg" *ngIf="issue.priority != 0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-up"><line x1="12" y1="19" x2="12" y2="5"></line><polyline points="5 12 12 5 19 12"></polyline></svg>
+            <svg xmlns="http://www.w3.org/2000/svg" *ngIf="issue.priority == 0" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-arrow-down"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+          </div>
+          <span>
+            {{ priorityToText(issue.priority) }}
+          </span>
+        </div>
       </td>
       <td>
         <span [ngClass]="statusTypeToClass(issue.statusType)">
@@ -77,11 +80,11 @@
         </span>
       </td>
       <td>
-        <a title="Issues" [routerLink]="['/issues', issue.issueId, 'attachments']" class="action-button">
-          <i class="fas fa-paperclip"></i>
+        <a title="Attachments" [routerLink]="['/Issues', issue.issueId, 'Attachments']" class="text-primary me-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-file"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path><polyline points="13 2 13 9 20 9"></polyline></svg>
         </a>
-        <a (click)="deleteIssue(issue)" role="button" class="action-button">
-          <i class="fas fa-times text-danger"></i>
+        <a (click)="deleteIssue(issue)" role="button" class="text-danger">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </a>
       </td>
     </tr>

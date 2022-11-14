@@ -1,74 +1,62 @@
 <div *ngIf="!projects">There are no projects to assign a new issue...</div>
 
-<div *ngIf="issue && projects" class="container-fluid form-group form-new">
+<div *ngIf="issue && projects" class="d-flex justify-content-center">
   <div *ngIf="errorMessage" class="alert alert-danger" role="alert">Error: {{ errorMessage }}</div>
-  <div class="row">
-    <div class="col-md-2 visible-lg"></div>
-    <div class="col-xs-12 col-md-8 py-2" style="background:#eee;">
-      <h4>Create Issue</h4>
-      <form #form="ngForm" (submit)="onSubmit(form)" novalidate>
-        <div class="form-group row">
-          <div class="col-md-6 ">
-            <label>Project</label>
-            <select name="project" class="form-control" data-width="100%" required ngModel
-                    [(ngModel)]="issue.issueId"
-                    (ngModelChange)="issue.issueId=$event">
-              <option [ngValue]='project.projectId' *ngFor="let project of projects">{{ project.name }}</option>
-            </select>
-          </div>
-          <div class="col-md-6"></div>
-        </div>
-        <div class="form-group">
-          <label>Title</label>
-          <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Title" required
-                 [ngModel]="issue.title"
-                 (ngModelChange)="issue.title=$event">
-        </div>
-        <div class="form-group">
-          <div class="row">
-            <div class="col-md-6">
-              <label>Priority</label>
-              <select name="priority" class="form-control" data-width="100%"
-                      [(ngModel)]="issue.priority"
-                      (ngModelChange)="issue.priority=$event">
-                <option [ngValue]="0">Low</option>
-                <option [ngValue]="1">Normal</option>
-                <option [ngValue]="2">High</option>
-              </select>
-            </div>
-            <div class="col-md-6">
-              <label>Issue Type</label>
-              <select name="issuetype" class="form-control" data-width="100%"
-                      [(ngModel)]="issue.issueType"
-                      (ngModelChange)="issue.issueType=$event">
-                <option [ngValue]='0'>Bug</option>
-                <option [ngValue]='1'>Task</option>
-                <option [ngValue]='2'>Change</option>
-                <option [ngValue]='3'>Enhancement</option>
-              </select>
-            </div>
-          </div>
-        </div>
+  <div class="col-8 p-3" style="background:#eee;">
+    <h4>Create Issue</h4>
+    <form #form="ngForm" (submit)="onSubmit(form)" class="row g-2 mt-2" novalidate>
+      <div class="col-md-6">
+        <label class="form-label">Project</label>
+        <select name="project" class="form-select" data-width="100%" required ngModel
+                [(ngModel)]="issue.issueId"
+                (ngModelChange)="issue.issueId=$event">
+          <option [ngValue]='project.projectId' *ngFor="let project of projects">{{ project.name }}</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label>Title</label>
+        <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Title" required
+               [ngModel]="issue.title"
+               (ngModelChange)="issue.title=$event">
+      </div>
+      <div class="col-6">
+        <label class="form-label">Priority</label>
+        <select name="priority" class="form-select" data-width="100%"
+                [(ngModel)]="issue.priority"
+                (ngModelChange)="issue.priority=$event">
+          <option [ngValue]="0">Low</option>
+          <option [ngValue]="1">Normal</option>
+          <option [ngValue]="2">High</option>
+        </select>
+      </div>
+      <div class="col-6">
+        <label class="form-label">Issue Type</label>
+        <select name="issuetype" class="form-select" data-width="100%"
+                [(ngModel)]="issue.issueType"
+                (ngModelChange)="issue.issueType=$event">
+          <option [ngValue]='0'>Bug</option>
+          <option [ngValue]='1'>Task</option>
+          <option [ngValue]='2'>Change</option>
+          <option [ngValue]='3'>Enhancement</option>
+        </select>
+      </div>
+      <div class="col-12">
+        <label class="form-label">Description</label>
+        <textarea rows="4" name="description" class="form-control" placeholder="Details"
+                  [ngModel]="issue.description"
+                  (ngModelChange)="issue.description=$event"></textarea>
+      </div>
 
-        <div class="form-group">
-          <label>Description</label>
-          <textarea rows="4" name="description" class="form-control" placeholder="Details"
-                    [ngModel]="issue.description"
-                    (ngModelChange)="issue.description=$event"></textarea>
-        </div>
+      <div class="col-12">
+        <label class="form-label d-block">Attachments</label>
+        <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
+        <!-- <input type="file" id="files" name="files" (click)="addFile()" class="btn btn-default" /> -->
+      </div>
 
-        <div class="form-group">
-          <label>Attachments</label>
-          <input type="file" (change)="fileChange($event)" placeholder="Upload file" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx">
-          <!-- <input type="file" id="files" name="files" (click)="addFile()" class="btn btn-default" /> -->
-        </div>
-
-        <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Create</button>
-          <a [routerLink]="['/issues']" class="btn btn-primary">Cancel</a>
-        </div>
-      </form>
-    </div>
-    <div class="col-md-2 visible-lg"></div>
+      <div class="text-center col-12">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="form.invalid">Create</button>
+        <a [routerLink]="['/Issues']" class="btn btn-primary">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>

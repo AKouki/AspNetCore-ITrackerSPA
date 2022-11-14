@@ -1,12 +1,8 @@
 <h1>Projects</h1>
 
-<div class="header-actions d-flex">
-  <div class="col-md-5">
-    <input type="text" [(ngModel)]='listFilter' class="form-control" placeholder="Search for project...">
-  </div>
-  <div class="col-md-7 text-right">
-    <a [routerLink]="['create']" class="btn btn-primary"><span class="glyphicon glyphicon-plus small"></span> New Project</a>
-  </div>
+<div class="header-actions d-flex justify-content-between">
+    <input type="search" [(ngModel)]='searchText' class="form-control" placeholder="Search for project...">
+    <a [routerLink]="['Create']" class="btn btn-primary">New Project</a>
 </div>
 
 <div *ngIf="!projects || projects.length == 0">No projects found.</div>
@@ -22,10 +18,10 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor='let project of projects | projectFilter:listFilter'>
+    <tr *ngFor='let project of projects | projectFilter:searchText'>
       <td>{{ project.projectId }}</td>
       <td>
-        <a [routerLink]="['/projects', project.projectId, 'edit']">{{ project.name }}</a>
+        <a [routerLink]="['/Projects', project.projectId, 'Edit']">{{ project.name }}</a>
       </td>
       <td>{{ project.description }}</td>
       <td>
@@ -33,11 +29,11 @@
         <span *ngIf="!project.url">No URL</span>
       </td>
       <td>
-        <a title="Issues" (click)="updateProject(project)" [routerLink]="['/projects', project.projectId, 'issues']" class="action-button">
-          <i class="fas fa-tasks"></i>
+        <a title="Issues" (click)="updateProject(project)" [routerLink]="['/Projects', project.projectId, 'Issues']" class="me-2">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-check-circle"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
         </a>
-        <a (click)="deleteProject(project)" role="button" class="action-button">
-          <i class="fas fa-times text-danger"></i>
+        <a (click)="deleteProject(project)" role="button" class="text-danger">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
         </a>
       </td>
     </tr>

@@ -1,14 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using ITrackerSPA.Data;
+﻿using ITrackerSPA.Data;
 using ITrackerSPA.Models;
 using ITrackerSPA.Models.Enums;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,40 +12,44 @@ namespace ITrackerSPA.Controllers
     [Authorize]
     public class AttachmentsController : ControllerBase
     {
+        private readonly ApplicationDbContext _db;
         private readonly IWebHostEnvironment _env;
-        private readonly ApplicationDbContext _context;
 
-        public AttachmentsController(ApplicationDbContext context, IWebHostEnvironment env)
+        public AttachmentsController(ApplicationDbContext db, IWebHostEnvironment env)
         {
-            _context = context;
+            _db = db;
             _env = env;
         }
 
-        // GET: /Attachments
         [HttpGet]
-        public IEnumerable<Attachment> Index()
+        public async Task<IEnumerable<Attachment>> Get()
         {
-            return _context.Attachments.OrderByDescending(a => a.AttachmentId).ToList();
+            var items = await _db.Attachments
+                .ToListAsync();
+
+            return items;
         }
 
-        // DELETE: /Attachments/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var attachment = _context.Attachments.Where(a => a.AttachmentId == id).FirstOrDefault();
+            var attachment = await _db.Attachments.FindAsync(id);
             if (attachment == null)
                 return NotFound();
 
             try
             {
                 // Delete file from database
-                _context.Attachments.Remove(attachment);
-                _context.SaveChanges();
+                _db.Attachments.Remove(attachment);
+                await _db.SaveChangesAsync();
 
                 // Delete file from disk
-                var filePath = Path.Combine(_env.WebRootPath, attachment.Path);
-                if (System.IO.File.Exists(filePath))
-                    System.IO.File.Delete(filePath);
+                if (!string.IsNullOrWhiteSpace(attachment.Path))
+                {
+                    var filePath = Path.Combine(_env.WebRootPath, attachment.Path);
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+                }
 
                 return Ok();
             }
@@ -62,12 +59,11 @@ namespace ITrackerSPA.Controllers
             }
         }
 
-        // POST: /Attachments/Upload/{issueId}
         [HttpPut("[action]/{issueId}")]
         public async Task<IActionResult> Upload(int issueId, IFormFile file)
         {
             // Get issue to map the attachment
-            var issue = _context.Issues.Where(i => i.IssueId == issueId).FirstOrDefault();
+            var issue = await _db.Issues.FindAsync(issueId);
             if (issue == null)
                 return NotFound();
 
@@ -77,14 +73,12 @@ namespace ITrackerSPA.Controllers
 
             // Save file
             var fileName = Path.GetFileNameWithoutExtension(file.FileName) + "_" +
-                            DateTime.Now.ToString("yyyyMMddHHmmss") +
-                            Path.GetExtension(file.FileName);
+                DateTime.Now.ToString("yyyyMMddHHmmss") +
+                Path.GetExtension(file.FileName);
+
             var filePath = Path.Combine(_env.WebRootPath, fileName);
-            using (var fs = new FileStream(filePath, FileMode.Create))
-            {
-                await file.CopyToAsync(fs);
-                // file.CopyTo(fs);
-            }
+            using var fs = new FileStream(filePath, FileMode.Create);
+            await file.CopyToAsync(fs);
 
             // Save file record to db
             Attachment attachment = new Attachment()
@@ -95,8 +89,8 @@ namespace ITrackerSPA.Controllers
                 FileType = GetFileType(file),
                 Issue = issue
             };
-            _context.Attachments.Add(attachment);
-            _context.SaveChanges();
+            _db.Attachments.Add(attachment);
+            await _db.SaveChangesAsync();
 
             return Ok();
         }
@@ -108,14 +102,13 @@ namespace ITrackerSPA.Controllers
             if (allowedExtensions.Any(e => fileExtension.Contains(e)))
                 return FileType.Image;
 
-            // Anyway...
             return FileType.Document;
         }
 
         private bool IsValidFile(IFormFile file)
         {
             string[] allowedExtensions = { "png", "jpg", "jpeg", "pdf", "doc", "docx" };
-            string fileExtension = Path.GetExtension(file.FileName);
+            string fileExtension = Path.GetExtension(file.FileName).ToLowerInvariant();
 
             // Invalid file
             if (file == null || file.Length == 0)
@@ -127,6 +120,9 @@ namespace ITrackerSPA.Controllers
 
             // Only the above file extensions are allowed
             if (!allowedExtensions.Any(e => fileExtension.Contains(e)))
+                return false;
+
+            if (file.FileName.Length > 255)
                 return false;
 
             return true;

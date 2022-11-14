@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { IssueService } from '../shared/issue.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Issue } from '../shared/issue';
-import { Project } from '../../projects/shared/project';
 import { NgForm } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Project } from '../../projects/shared/project';
 import { ProjectService } from '../../projects/shared/project.service';
+import { Issue } from '../shared/issue';
+import { IssueService } from '../shared/issue.service';
 
 @Component({
   selector: 'app-issue-create',
@@ -13,8 +13,8 @@ import { ProjectService } from '../../projects/shared/project.service';
 })
 export class IssueCreateComponent implements OnInit {
   issue: Issue = {} as Issue;
-  projects: Project[];
-  errorMessage: string;
+  projects: Project[] = [];
+  errorMessage: string = "";
   fileToUpload: any;
 
   constructor(private issueService: IssueService,
@@ -22,7 +22,7 @@ export class IssueCreateComponent implements OnInit {
     private activatedRoute: ActivatedRoute,
     private router: Router) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     // Default - empty issue
     this.issue = {
       issueId: -1,
@@ -33,21 +33,19 @@ export class IssueCreateComponent implements OnInit {
       statusType: 0
     };
 
-    //this.projects = this.sharedService.projects;
-    this.projectService.getProjects().subscribe(result => {
-      this.projects = result;
-    }, error => console.error(error));
+    this.projectService.getProjects()
+      .subscribe(result => this.projects = result, error => console.error(error));
   }
 
   onSubmit(form: NgForm) {
     // Any file to upload?
     this.issueService.createIssue(this.issue).subscribe(result => {
-        if (result.issueId > -1) {
-          this.uploadFile(result.issueId);
-        }
-        else
-          this.errorMessage = "Invalid Request. Check your values!";
-      },
+      if (result.issueId > -1) {
+        this.uploadFile(result.issueId);
+      }
+      else
+        this.errorMessage = "Invalid Request. Check your values!";
+    },
       error => {
         this.errorMessage = error;
         console.log(error);
@@ -65,20 +63,19 @@ export class IssueCreateComponent implements OnInit {
           console.error('File not uploaded!');
         },
         () => {
-          this.router.navigate(['/issues']);
+          this.router.navigate(['/Issues']);
         }
       );
     }
     else {
-      this.router.navigate(['/issues']);
+      this.router.navigate(['/Issues']);
     }
   }
 
-  fileChange(event) {
+  fileChange(event: any) {
     let fileList: FileList = event.target.files;
     if (fileList.length > 0) {
       this.fileToUpload = fileList[0];
     }
   }
-
 }

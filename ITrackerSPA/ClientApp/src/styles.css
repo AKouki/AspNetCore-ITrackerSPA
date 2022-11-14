@@ -1,12 +1,5 @@
-/* You can add global styles to this file, and also import other style files */
-
-/* Provide sufficient contrast against white background */
 a {
   color: #0366d6;
-}
-
-code {
-  color: #e01a76;
 }
 
 .btn-primary {
@@ -15,45 +8,49 @@ code {
   border-color: #1861ac;
 }
 
-html {
-  font-size: 14px;
+.main-content {
+    flex-grow: 1;
+    padding: 20px 50px;
+    height: 100vh;
+    overflow-y: auto;
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
+.app {
+    display: flex;
+}
+
+@media screen and (min-width: 992px) {
+    .user-profile {
+      margin-top: auto;
+      background: #2f7aa1;
   }
 }
 
-input[type=text] {
-    max-width: 350px;
+@media screen and (max-width: 991.98px) {
+  .app {
+    flex-direction: column;
+  }
+
+  .main-content {
+    height: 100%;
+    padding: 20px 30px;
+  }
 }
 
-
-body {
-  overflow: hidden;
+.nav-link {
+    color: rgba(255,255,255,0.85) !important;
 }
 
-.body-content {
-    height: 100vh;
-    overflow-y: auto;
-    padding: 20px;
+.user-profile ul {
 }
 
-.someClass {
-  background: #f0ad4e;
-  color: #EEE;
-  border: none !important;
-  border-radius: 0 !important;
-  height: 40px;
+.user-profile ul li:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.25);
 }
 
-.someClass:active {
-    color: white;
-}
-
-.someClass:hover {
-    color: #CCC !important;
+.user-profile ul li {
+    flex-basis: 49% !important;
+    text-align: center;
 }
 
 h1 {
@@ -65,62 +62,30 @@ h1 {
 .header-actions {
   background-color: #eee;
   padding: 7px;
+  margin: 5px 0;
   float: left;
   width: 100%;
   margin-bottom: 7px;
 }
 
-ul.issues-header-actions li {
-  margin: 0 1px !important;
-}
-
-.dropdown-menu li.selected,
-.dropdown-menu li.selected:hover {
-  background: #337AB7;
-}
-
-  .dropdown-menu li.selected a,
-  .dropdown-menu li.selected a:hover {
-    background: #337AB7;
-    color: white;
-  }
-
-.someClass2 {
-  background: #ddd;
-  border-radius: 0 !important;
-}
-
 .label-small {
-  /* font-size: 10px !important;
-    margin-top: -6px;
-    position: relative;
-    top: -4px; */
-  font-size: 12px !important;
+  font-size: 14px !important;
   color: #777;
   position: relative;
   top: -2px;
 }
 
-.btn-remove {
-  color: red;
-  margin-left: 5px;
+input[type=search] {
+    max-width: 250px;
 }
 
-.form-new {
-  margin-top: 30px;
-  border-radius: 4px
+.filters-list {
+    display: flex;
+    list-style: none;
+    margin: 0 0.5rem;
+    padding: 0;
 }
 
-.form-new h4 {
-    line-height: 25px;
+.filters-list li {
+    margin-right: 0.5rem;
 }
-
-form div.alert {
-  margin: 0;
-  padding: 5px;
-}
-
-.action-button {
-  margin-right: 10px;
-}
-

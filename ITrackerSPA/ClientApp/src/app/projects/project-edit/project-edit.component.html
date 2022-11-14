@@ -1,38 +1,35 @@
 <p *ngIf="!project">Error while loading project</p>
-<div *ngIf="project" class="container-fluid form-group form-new">
-  <div class="row">
-    <div *ngIf="errorMessage" class="alert alert-danger" role="alert">Error: {{ errorMessage }}</div>
-    <div class="col-lg-3 visible-lg"></div>
-    <div class="col-xs-12 col-lg-6" style="background:#eee;">
-      <h4 *ngIf="!projectId">Create new project</h4>
-      <h4 *ngIf="projectId">Edit {{ project.name }}</h4>
-      <form #form="ngForm" (submit)="onSubmit(form)" novalidate>
-        <div class="form-group">
-          <label>Name</label>
-          <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Name" required
-                 [ngModel]="project.name"
-                 (ngModelChange)="project.name=$event">
-          <!--<div *ngIf="pname.invalid" class="alert alert-danger">Project name is required. Minimum length: 5</div>-->
-        </div>
-        <div class="form-group">
-          <label>URL</label>
-          <input type="text" class="form-control" name="url" placeholder="Url"
-                 [ngModel]="project.url"
-                 (ngModelChange)="project.url=$event">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea rows="4" name="description" class="form-control" placeholder="Details"
-                    [ngModel]="project.description"
-                    (ngModelChange)="project.description=$event"></textarea>
-        </div>
 
-        <div class="text-center form-group">
-          <button type="submit" class="btn btn-primary" [disabled]="form.invalid">{{ !projectId ? "Create" : "Update" }}</button>
-          <a [routerLink]="['/projects']" class="btn btn-primary">Cancel</a>
-        </div>
-      </form>
-    </div>
-    <div class="col-lg-3 visible-lg"></div>
+<div *ngIf="project" class="d-flex justify-content-center">
+  <div *ngIf="errorMessage" class="alert alert-danger" role="alert">Error: {{ errorMessage }}</div>
+  <div class="col-6 p-3" style="background:#eee;">
+    <h4 *ngIf="projectId == -1">Create new project</h4>
+    <h4 *ngIf="projectId >= 1">Edit {{ project.name }}</h4>
+    <form #form="ngForm" (submit)="onSubmit(form)" class="row g-2 mt-2" novalidate>
+      <div class="form-group">
+        <label>Name</label>
+        <input #pname="ngModel" pattern=".....+" type="text" class="form-control" name="name" placeholder="Name" required
+               [ngModel]="project.name"
+               (ngModelChange)="project.name=$event">
+        <!--<div *ngIf="pname.invalid" class="alert alert-danger">Project name is required. Minimum length: 5</div>-->
+      </div>
+      <div class="form-group">
+        <label>URL</label>
+        <input type="text" class="form-control" name="url" placeholder="Url"
+               [ngModel]="project.url"
+               (ngModelChange)="project.url=$event">
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <textarea rows="4" name="description" class="form-control" placeholder="Details"
+                  [ngModel]="project.description"
+                  (ngModelChange)="project.description=$event"></textarea>
+      </div>
+
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary me-2" [disabled]="form.invalid">{{ projectId < 1 ? "Create" : "Update" }}</button>
+        <a [routerLink]="['/Projects']" class="btn btn-primary">Cancel</a>
+      </div>
+    </form>
   </div>
 </div>

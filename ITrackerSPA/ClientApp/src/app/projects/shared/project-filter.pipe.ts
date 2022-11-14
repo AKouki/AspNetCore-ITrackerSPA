@@ -7,7 +7,7 @@ import { Project } from './project';
 export class ProjectFilterPipe implements PipeTransform {
 
   transform(value: Project[], filterBy: string): Project[] {
-    filterBy = filterBy ? filterBy.toLocaleLowerCase() : null;
+    filterBy = filterBy ? filterBy.toLocaleLowerCase() : "";
     return filterBy ? value.filter((issue: Project) =>
       issue.name.toLocaleLowerCase().indexOf(filterBy) !== -1) : value;
   }

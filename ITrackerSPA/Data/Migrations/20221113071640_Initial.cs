@@ -1,22 +1,26 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
+#nullable disable
+
 namespace ITrackerSPA.Data.Migrations
 {
+    /// <inheritdoc />
     public partial class Initial : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
-                    ProjectId = table.Column<int>(nullable: false)
+                    ProjectId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    Url = table.Column<string>(nullable: true),
-                    CreatedAt = table.Column<DateTime>(nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,17 +31,17 @@ namespace ITrackerSPA.Data.Migrations
                 name: "Issues",
                 columns: table => new
                 {
-                    IssueId = table.Column<int>(nullable: false)
+                    IssueId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Title = table.Column<string>(maxLength: 256, nullable: false),
-                    Description = table.Column<string>(nullable: true),
-                    IssueType = table.Column<int>(nullable: false),
-                    Priority = table.Column<int>(nullable: false),
-                    StatusType = table.Column<int>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    UpdatedAt = table.Column<DateTime>(nullable: false),
-                    Creator = table.Column<string>(nullable: true),
-                    ProjectId = table.Column<int>(nullable: true)
+                    Title = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IssueType = table.Column<int>(type: "int", nullable: false),
+                    Priority = table.Column<int>(type: "int", nullable: false),
+                    StatusType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Creator = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProjectId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -54,13 +58,13 @@ namespace ITrackerSPA.Data.Migrations
                 name: "Attachments",
                 columns: table => new
                 {
-                    AttachmentId = table.Column<int>(nullable: false)
+                    AttachmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(nullable: true),
-                    Path = table.Column<string>(nullable: true),
-                    FileType = table.Column<int>(nullable: false),
-                    CreatedAt = table.Column<DateTime>(nullable: false),
-                    IssueId = table.Column<int>(nullable: true)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    FileType = table.Column<int>(type: "int", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IssueId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -84,6 +88,7 @@ namespace ITrackerSPA.Data.Migrations
                 column: "ProjectId");
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(

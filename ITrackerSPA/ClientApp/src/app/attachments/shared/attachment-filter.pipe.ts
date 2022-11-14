@@ -7,7 +7,7 @@ import { Attachment } from './attachment';
 export class AttachmentFilterPipe implements PipeTransform {
 
   transform(value: Attachment[], filterBy: string): Attachment[] {
-    filterBy = filterBy ? filterBy.toLocaleLowerCase() : null;
+    filterBy = filterBy ? filterBy.toLocaleLowerCase() : "";
     return filterBy ? value.filter((issue: Attachment) =>
       issue.name.toLocaleLowerCase().indexOf(filterBy) !== -1) : value;
   }
